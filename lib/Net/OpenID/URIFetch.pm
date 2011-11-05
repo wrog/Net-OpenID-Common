@@ -65,6 +65,14 @@ sub fetch {
             $ref = Storable::thaw($blob);
         }
     }
+    my $cached_response = sub {
+        return Net::OpenID::URIFetch::Response->new(
+            status => 200,
+            content => $ref->{Content},
+            headers => $ref->{Headers},
+            final_uri => $ref->{FinalURI},
+        );
+    };
 
     # We just serve anything from the last 60 seconds right out of the cache,
     # thus avoiding doing several requests to the same URL when we do
@@ -72,12 +80,7 @@ sub fetch {
     # TODO: Make this tunable?
     if ($ref && $ref->{CacheTime} > (time() - 60)) {
         $consumer->_debug("Cache HIT for $uri");
-        return Net::OpenID::URIFetch::Response->new(
-            status => 200,
-            content => $ref->{Content},
-            headers => $ref->{Headers},
-            final_uri => $ref->{FinalURI},
-        );
+        return $cached_response->();
     }
     else {
         $consumer->_debug("Cache MISS for $uri");
@@ -105,12 +108,7 @@ sub fetch {
 
     if ($res->code == HTTP::Status::RC_NOT_MODIFIED()) {
         $consumer->_debug("Server says it's not modified. Serving from cache.");
-        return Net::OpenID::URIFetch::Response->new(
-            status => 200,
-            content => $ref->{Content},
-            headers => $ref->{Headers},
-            final_uri => $ref->{FinalURI},
-        );
+        return $cached_response->();
     }
     else {
         my $content = $res->content;
