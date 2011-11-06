@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.13      Nov 06 2011
+
     * Use/cache Last-modified: as a number, not a raw header string (closes #47349)
 
     * Pay attention to charset on application/xrds+xml content-type (closes #41310)
