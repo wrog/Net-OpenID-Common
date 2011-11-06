@@ -9,6 +9,8 @@ use Net::OpenID::URIFetch;
 use XML::Simple;
 use Net::OpenID::Yadis::Service;
 use Net::OpenID::Common;
+use Email::MIME::ContentType;
+use Encode;
 
 our @EXPORT = qw(YR_HEAD YR_GET YR_XRDS);
 
@@ -148,16 +150,40 @@ sub discover {
 
     $self->identity_url($final_url) if ($count < YR_XRDS);
 
+    # (1) found YADIS/XRDS-Location headers
     if ($count < YR_XRDS and
         my $doc_url = $headers{'x-yadis-location'} || $headers{'x-xrds-location'}
        ) {
         return $self->discover($doc_url, YR_XRDS);
     }
-    elsif ( (my $ctype = (split /;\s*/, $headers{'content-type'})[0]) eq 'application/xrds+xml') {
+    
+    # (2) is content type YADIS document?
+    my $pct = parse_content_type($headers{'content-type'});
+    my $ctype = join '/', @{$pct}{qw(discrete composite)}; # really should be qw(type subtype)
+    if ($ctype eq 'application/xrds+xml') {
+        #survey says Yes!
         $self->xrd_url($final_url);
+
+        my $charset = $pct->{attributes}->{charset};
+        if ($charset && (lc($charset) ne 'utf-8') && Encode::find_encoding($charset)) {
+            # not UTF-8, but it's one of the ones we know about, so...
+            Encode::from_to($xrd,$charset,'utf-8');
+            # And now we are UTF-8, BUT...
+            # XML spec requires specifying the encoding in the prolog
+            # whenever it's not UTF-8 *and* death if the specified encoding
+            # doesn't match the actual encoding, so we have to fix the prolog
+            my $encoding_re = qr/\s+encoding\s*=\s*['"][A-Z][-A-Za-z0-9._]*["']/;
+            $xrd =~ s/$encoding_re//
+              # but make sure there *is* a prolog, first; also allow for the
+              # possibility of BOM (byte-order mark) re-encoding into
+              # garbage at the beginning
+              if ($xrd =~ m/\A.{0,4}<?xml\s+version\s*=\s*['"][0-9.]+["']$encoding_re/);
+        }
         return $self->parse_xrd($xrd);
     }
-    elsif ( $ctype eq 'text/html' and
+
+    # (3) YADIS/XRDS-location might be in a <meta> tag.
+    if ( $ctype eq 'text/html' and
             my ($meta) = grep {
                 my $heqv = lc($_->{'http-equiv'}||'');
                 $heqv eq 'x-yadis-location' || $heqv eq 'x-xrds-location'
@@ -166,9 +192,7 @@ sub discover {
           ) {
         return $self->discover($meta->{content}, YR_XRDS);
     }
-    else {
-        return $self->_fail($count == YR_GET ? "no_yadis_document" : "too_many_hops");
-    }
+    return $self->_fail($count == YR_GET ? "no_yadis_document" : "too_many_hops");
 }
 
 sub parse_xrd {
