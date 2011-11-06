@@ -154,32 +154,25 @@ sub fetch {
 
 package Net::OpenID::URIFetch::Response;
 
+use strict;
+use constant FIELDS => [qw(final_uri status content headers)];
+use fields @{FIELDS()};
+use Carp();
+
 sub new {
     my ($class, %opts) = @_;
-
-    my $self = {};
-    $self->{final_uri} = delete($opts{final_uri});
-    $self->{status} = delete($opts{status});
-    $self->{content} = delete($opts{content});
-    $self->{headers} = delete($opts{headers});
-
-    return bless $self, $class;
+    my $self = fields::new($class);
+    @{$self}{@{FIELDS()}} = delete @opts{@{FIELDS()}};
+    Carp::croak("Unknown option(s): " . join(", ", keys %opts)) if %opts;
+    return $self;
 }
 
-sub final_uri {
-    return $_[0]->{final_uri};
-}
-
-sub status {
-    return $_[0]->{status};
-}
-
-sub content {
-    return $_[0]->{content};
-}
-
-sub headers {
-    return $_[0]->{headers};
+BEGIN {
+    foreach my $field_name (@{FIELDS()}) {
+        no strict 'refs';
+        *{__PACKAGE__ . '::' . $field_name}
+          = sub { return $_[0]->{$field_name}; };
+    }
 }
 
 sub header {
