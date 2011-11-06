@@ -156,7 +156,7 @@ sub discover {
        ) {
         return $self->discover($doc_url, YR_XRDS);
     }
-    
+
     # (2) is content type YADIS document?
     my $pct = parse_content_type($headers{'content-type'});
     my $ctype = join '/', @{$pct}{qw(discrete composite)}; # really should be qw(type subtype)
@@ -257,7 +257,7 @@ sub services {
     my @servers;
     @servers = $self->xrd_objects if (keys %protocols == 0);
     foreach my $key (@protocols) {
-        my $regex = $protocols{$key}->{urlregex} || $key; 
+        my $regex = $protocols{$key}->{urlregex} || $key;
         my @ver = @{$protocols{$key}->{versionarray}};
         my $ver_regex = @ver ? '('.join('|',map { $_ =~ s/\./\\./g; $_ } @ver).')' : '.+' ;
         $regex =~ s/\\ver/$ver_regex/;
@@ -280,7 +280,7 @@ Net::OpenID::Yadis - Perform Yadis discovery on URLs
 =head1 SYNOPSIS
 
   use Net::OpenID::Yadis;
-  
+
   my $disc = Net::OpenID::Yadis->new(
       consumer => $consumer, # Net::OpenID::Consumer object
   );
@@ -327,7 +327,7 @@ uses, L<Net::Yadis::Discovery> is probably a better choice.
 
 my $disc = Net::OpenID::Yadis->new([ %opts ]);
 
-You can set the C<consumer> in the constructor.  See the corresponding 
+You can set the C<consumer> in the constructor.  See the corresponding
 method description below.
 
 =back
@@ -365,7 +365,7 @@ Given a user-entered $url (which could be missing http://, or have
 extra whitespace, etc), returns either array/array ref of Net::OpenID::Yadis::Service
 objects, or undef on failure.
 
-$request_method is optional, and if set this, you can change the HTTP 
+$request_method is optional, and if set this, you can change the HTTP
 request method of fetching Yadis URL.
 See EXPORT to know the value you can set, and default is YR_HEAD.
 
@@ -426,7 +426,7 @@ filter only given version of protocol.
 Sample:
   $disc->servers("openid"=>['1.0','1.1'],"lid"=>['1.0']);
 
-If you want to use version numbers limitation with type URL, you can use 
+If you want to use version numbers limitation with type URL, you can use
 \ver as place holder of version number.
 
 Sample:

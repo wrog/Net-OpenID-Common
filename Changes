@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+    * Use/cache Last-modified: as a number, not a raw header string (closes #47349)
+
+    * Pay attention to charset on application/xrds+xml content-type (closes #41310)
+
 1.12      Oct 25 2011
 
     * API change:  IndirectMessage->new(CODEREF)
