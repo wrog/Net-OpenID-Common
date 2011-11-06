@@ -69,6 +69,7 @@ sub fetch {
         return Net::OpenID::URIFetch::Response->new(
             status => 200,
             content => $ref->{Content},
+            last_modified => $ref->{LastModified},
             headers => $ref->{Headers},
             final_uri => $ref->{FinalURI},
         );
@@ -94,7 +95,7 @@ sub fetch {
         if (my $etag = ($ref->{Headers}->{etag})) {
             $req->header('If-None-Match', $etag);
         }
-        if (my $ts = ($ref->{Headers}->{'last-modified'})) {
+        if (my $ts = $ref->{LastModified}) {
             $req->if_modified_since($ts);
         }
     }
@@ -130,6 +131,7 @@ sub fetch {
 
         my $ret = Net::OpenID::URIFetch::Response->new(
             status => $res->code,
+            last_modified => $res->last_modified,
             content => $content,
             headers => $headers,
             final_uri => $final_uri,
@@ -137,6 +139,7 @@ sub fetch {
 
         if ($cache && $res->code == 200) {
             my $cache_data = {
+                LastModified => $ret->last_modified,
                 Headers => $ret->headers,
                 Content => $ret->content,
                 CacheTime => time(),
@@ -155,7 +158,7 @@ sub fetch {
 package Net::OpenID::URIFetch::Response;
 
 use strict;
-use constant FIELDS => [qw(final_uri status content headers)];
+use constant FIELDS => [qw(final_uri status content headers last_modified)];
 use fields @{FIELDS()};
 use Carp();
 
