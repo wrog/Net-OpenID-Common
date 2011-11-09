@@ -67,7 +67,7 @@ If C<$namespace> is not specified, the default is the namespace whose name is th
 
 =head1 COPYRIGHT, WARRANTY, AUTHOR
 
-See L<Net::OpenID::Yadis> for author, copyrignt and licensing information.
+See L<Net::OpenID::Yadis> for author, copyright and licensing information.
 
 =head1 SEE ALSO
 
