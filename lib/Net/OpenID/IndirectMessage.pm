@@ -298,3 +298,17 @@ For the other kinds of objects, this module will do the right thing automaticall
 Most of the time callers won't need to use this class directly, but will instead
 access it through a L<Net::OpenID::Consumer> instance.
 
+=head1 METHODS
+
+=item B<protocol_version>
+
+Currently returns 1 or 2, according as this is an OpenID 1.0/1.1 or an OpenID 2.0 message.
+
+=item B<has_ext>
+
+Takes an extension namespace and returns true if the named extension is used in this message.
+
+=item B<get_ext>
+
+Takes an extension namespace and an optional parameter name, returns the parameter value,
+or if no parameter given, the parameter value.
