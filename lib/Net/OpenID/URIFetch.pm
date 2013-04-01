@@ -112,13 +112,9 @@ sub fetch {
         return $cached_response->();
     }
     else {
-        my $content = $res->content;
+        my $content = $res->decoded_content;
         my $final_uri = $res->request->uri->as_string();
         my $final_cache_key = "URIFetch:${prefix}:${final_uri}";
-
-        if ($res->content_encoding && $res->content_encoding eq 'gzip') {
-            $content = Compress::Zlib::memGunzip($content);
-        }
 
         if ($content_hook) {
             $content_hook->(\$content);

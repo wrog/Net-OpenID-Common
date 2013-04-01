@@ -179,20 +179,6 @@ sub discover {
         #survey says Yes!
         $self->xrd_url($final_url);
 
-        if ($charset && ($charset ne 'utf-8') && Encode::find_encoding($charset)) {
-            # not UTF-8, but it's one of the ones we know about, so...
-            Encode::from_to($xrd,$charset,'utf-8');
-            # And now we are UTF-8, BUT...
-            # XML spec requires specifying the encoding in the prolog
-            # whenever it's not UTF-8 *and* death if the specified encoding
-            # doesn't match the actual encoding, so we have to fix the prolog
-            my $encoding_re = qr/\s+encoding\s*=\s*['"][A-Z][-A-Za-z0-9._]*["']/;
-            $xrd =~ s/$encoding_re//
-              # but make sure there *is* a prolog, first; also allow for the
-              # possibility of BOM (byte-order mark) re-encoding into
-              # garbage at the beginning
-              if ($xrd =~ m/\A.{0,4}<?xml\s+version\s*=\s*['"][0-9.]+["']$encoding_re/);
-        }
         return $self->parse_xrd($xrd);
     }
 
