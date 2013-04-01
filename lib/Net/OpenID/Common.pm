@@ -15,9 +15,21 @@ This package is Copyright (c) 2005 Brad Fitzpatrick, and (c) 2008 Martin Atkins.
 
 You may distribute under the terms of either the GNU General Public License or the Artistic License, as specified in the Perl README file. If you need more liberal licensing terms, please contact the maintainer.
 
+=head1 AUTHORS
+
+Brad Fitzpatrick <brad@danga.com>
+
+Tatsuhiko Miyagawa <miyagawa@sixapart.com>
+
+Martin Atkins <mart@degeneration.co.uk>
+
+Robert Norris <rob@eatenbyagrue.org>
+
+Roger Crew <crew@cs.stanford.edu>
+
 =head1 MAINTAINER
 
-Maintained by Martin Atkins <mart@degeneration.co.uk>
+Maintained by Roger Crew <crew@cs.stanford.edu>
 
 =cut
 
