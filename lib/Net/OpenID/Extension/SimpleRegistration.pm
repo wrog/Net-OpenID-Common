@@ -59,7 +59,7 @@ sub received {
     my ($class, $args) = @_;
 
     my $self = $class->new();
-    my $args = $args->{sreg} || {};
+    $args = $args->{sreg} || {};
 
     $self->required_fields($args->{required});
     $self->optional_fields($args->{optional});
@@ -172,7 +172,7 @@ sub new {
 sub received {
     my ($class, $args) = @_;
 
-    my $args = $args->{sreg} || {};
+    $args = $args->{sreg} || {};
     my %opts = ();
 
     foreach my $field_name (@{FIELDS()}) {
