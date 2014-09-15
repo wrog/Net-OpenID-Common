@@ -1,6 +1,10 @@
 {{$NEXT}}
 
+    * bump HTTP::Message dependency to 5.814 (closes #90547)
+
 1.18      Sep 06 2013
+
+    * bump Crypt::DH::GMP dependency to 0.00011 (closes #88464)
 
 1.17      Apr 12 2013
 
