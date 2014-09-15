@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.19      Sep 15 2014
+
     * bump HTTP::Message dependency to 5.814 (closes #90547)
 
 1.18      Sep 06 2013
