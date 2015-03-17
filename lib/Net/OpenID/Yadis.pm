@@ -412,7 +412,7 @@ Returns Yadis Resource Descriptor URL.
 
 Filter method of xrd_objects.
 
-If no opton is defined, returns same result with xrd_objects method.
+If no option is defined, returns same result with xrd_objects method.
 
 protocol names or Type URLs are given, filter only given protocol.
 Two or more protocols are given, return and results of filtering.

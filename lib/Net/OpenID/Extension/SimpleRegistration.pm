@@ -1,4 +1,3 @@
-
 package Net::OpenID::Extension::SimpleRegistration;
 
 use base qw(Net::OpenID::Extension);
@@ -225,7 +224,7 @@ When Server sends back its response...
         email => $email,
     ));
 
-And finally, when back in Consumer recieving the response:
+And finally, when back in Consumer receiving the response:
 
     my $sreg_res = $verified_identity->get_extension_response('Net::OpenID::Extension::SimpleRegistration');
     my $nickname = $sreg_res->nickname;

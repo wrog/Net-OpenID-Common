@@ -1,4 +1,3 @@
-
 package Net::OpenID::Common;
 
 =head1 NAME
@@ -174,7 +173,7 @@ sub bytes2int {
 sub arg2int {
     my ($arg) = @_;
     return undef unless defined $arg and $arg ne "";
-    # don't acccept base-64 encoded numbers over 700 bytes.  which means
+    # don't accept base-64 encoded numbers over 700 bytes.  which means
     # those over 4200 bits.
     return 0 if length($arg) > 700;
     return bytes2int(MIME::Base64::decode_base64($arg));
