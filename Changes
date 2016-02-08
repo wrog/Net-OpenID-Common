@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+    * spelling corrections from dsteinbrunner (closes #111859)
+
 1.19      Sep 15 2014
 
     * bump HTTP::Message dependency to 5.814 (closes #90547)
